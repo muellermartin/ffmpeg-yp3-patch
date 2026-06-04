@@ -16,7 +16,7 @@ diff --git a/encoder/set.c b/encoder/set.c
 index ec47193..222c8a9 100644
 --- a/encoder/set.c
 +++ b/encoder/set.c
-@@ -170,7 +170,8 @@ void x264_sps_init( x264_sps_t *sps, int i_id, x264_param_t *param )
+@@ -170,16 +170,21 @@ void x264_sps_init( x264_sps_t *sps, int i_id, x264_param_t *param )
      while( (1 << sps->i_log2_max_frame_num) <= max_frame_num )
          sps->i_log2_max_frame_num++;
  
@@ -26,7 +26,11 @@ index ec47193..222c8a9 100644
      if( sps->i_poc_type == 0 )
      {
          int max_delta_poc = (param->i_bframe + 2) * (!!param->i_bframe_pyramid + 1) * 2;
-@@ -179,7 +180,8 @@ void x264_sps_init( x264_sps_t *sps, int i_id, x264_param_t *param )
++        /* Without B-frames, pic_order_cnt_lsb increments by 2 each frame up to keyint. */
++        if( !param->i_bframe && !param->b_interlaced && !param->i_avcintra_class )
++            max_delta_poc = X264_MAX( max_delta_poc, param->i_keyint_max * 2 );
+         sps->i_log2_max_poc_lsb = 4;
+         while( (1 << sps->i_log2_max_poc_lsb) <= max_delta_poc * 2 )
              sps->i_log2_max_poc_lsb++;
      }
  
@@ -36,7 +40,7 @@ index ec47193..222c8a9 100644
  
      sps->b_gaps_in_frame_num_value_allowed = 0;
      sps->b_mb_adaptive_frame_field = param->b_interlaced;
-@@ -494,7 +496,7 @@ void x264_pps_init( x264_pps_t *pps, int i_id, x264_param_t *param, x264_sps_t *
+@@ -494,7 +499,7 @@ void x264_pps_init( x264_pps_t *pps, int i_id, x264_param_t *param, x264_sps_t *
      pps->i_pic_init_qp = param->rc.i_rc_method == X264_RC_ABR || param->b_stitchable ? 26 + QP_BD_OFFSET : SPEC_QP( param->rc.i_qp_constant );
      pps->i_pic_init_qs = 26 + QP_BD_OFFSET;
  
