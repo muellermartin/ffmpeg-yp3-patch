@@ -16,14 +16,16 @@ Without this patch, modern FFMPEG-encoded videos will not play, or will be sever
 # Patch
 
 - `i_nal_ref_idc = NAL_PRIORITY_DISPOSABLE`: P-slices must be disposable, not references.
-- `sps->i_poc_type = 0`: Error resilience.
+- `sps->i_poc_type = 0`: Required with disposable-P (explicit POC in every slice header).
 - `sps->b_vui = 0`: `extradata` must not include the VUI.
 - `pps->i_chroma_qp_index_offset = 0`: Required for proper color tint.
 - Disable `P_SKIP`.
+- Lower `i_mv_range` floor (32 → 4 px): so `-x264-params mvrange=16` is actually applied.
+- `h->i_idr_pic_id = 0`: Do not toggle IDR pic id 0/1; required for scenecut (`sc_threshold > 0`).
 
 # Encoding Requirements
 
-- `-x264-params "mvrange=8:merange=8"`: Restrict motion-vector range
+- `-x264-params "mvrange=16:merange=16"`: Clamp motion vectors (~16 px/component; do not go lower or much higher).
 - `-bsf:v "filter_units=remove_types=6"`: Device expects no SEI.
 - `-profile:v baseline`: Disable unsupported features.
 - `-c:a pcm_s16le`: Device expects uncompressed signed PCM 16-bit little-endian.
@@ -32,7 +34,7 @@ Without this patch, modern FFMPEG-encoded videos will not play, or will be sever
 
 # Encoding Recommendations
 
-- `-pix_fpt:v yuvj420p`: Device prefers full-range pixel format.
+- `-pix_fmt:v yuvj420p`: Device prefers full-range pixel format.
 - `-filter:v "transpose=cclock"`: Proper orientation.
 
 # Static Binary
