@@ -16,7 +16,7 @@ apk add --no-cache \
     build-base bash curl tar xz pkgconf diffutils \
     nasm yasm meson ninja \
     autoconf automake libtool perl \
-    zlib-dev
+    zlib-dev git
 
 mkdir -p "$PREFIX" "$WORKDIR"
 cd "$WORKDIR"

@@ -15,7 +15,7 @@ chmod +x "$SCRIPT_DIR/scripts/musl-build-inner.sh"
 docker buildx create --use
 docker run --privileged --rm tonistiigi/binfmt --install all
 
-echo "Building static musl ffmpeg in $IMAGE → $DIST64 & $DIST32"
+echo "Building static musl ffmpeg in $IMAGE → $DIST64"
 docker run --rm \
     --platform linux/arm64 \
     -v "$SCRIPT_DIR:/src:ro" \

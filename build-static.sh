@@ -14,6 +14,7 @@ chmod +x "$SCRIPT_DIR/scripts/musl-build-inner.sh"
 
 echo "Building static musl ffmpeg in $IMAGE → $DIST"
 docker run --rm \
+    --platform linux/amd64 \
     -v "$SCRIPT_DIR:/src:ro" \
     -v "$DIST:/dist" \
     -e SRC=/src \
