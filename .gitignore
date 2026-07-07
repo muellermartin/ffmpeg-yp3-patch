@@ -1,20 +1,2 @@
-# Build artifacts
 local/
 .build/
-*.tar.gz
-*.tar.xz
-
-# Large test media
-*.mp4
-*.avi
-*.webm
-*.mkv
-torture_sources/torture*.mp4
-
-# Editor / OS
-.DS_Store
-*.swp
-
-# Optional: commit .dist/musl-x86_64/bin/ffmpeg for a binary release;
-# uncomment the next line to gitignore it and require ./build-static.sh
-.dist/
